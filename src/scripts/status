@@ -1,0 +1,37 @@
+#!/bin/bash
+
+get_datetime () {
+  echo "$(date +"%-d %-b (%A of %-U week) %I:%M %P")"
+}
+
+get_battery () {
+  local status=$(cat /sys/class/power_supply/BAT0/status)
+  local status_short=""
+
+  if [ "${status,,}" = "discharging" ]; then
+    status_short="BAT"
+  elif [ "${status,,}" = "charging" ]; then
+    status_short="CHR"
+  fi
+
+  echo "$status_short $(cat /sys/class/power_supply/BAT0/capacity)%"
+}
+
+# Send the header so that i3bar knows we want to use JSON:
+echo '{ "version": 1 }'
+
+# Begin the endless array.
+echo '['
+
+# We send an empty first array of blocks to make the loop simpler:
+echo '[]'
+
+# Now send blocks with information forever:
+while :;
+do
+  echo -e ",["
+  echo -e "{\"name\":\"welcome\", \"full_text\": \" $(get_battery) \"},"
+  echo -e "{\"name\":\"id_time\",\"full_text\":\" $(get_datetime) \"}"
+  echo -e "]"
+  sleep 1
+done
