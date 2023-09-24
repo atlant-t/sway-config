@@ -17,6 +17,37 @@ get_battery () {
   echo "$status_short $(cat /sys/class/power_supply/BAT0/capacity)%"
 }
 
+is_caps_locked () {
+  local state=$(cat /sys/class/leds/input?::capslock/brightness)
+  if [ $state -eq 1 ]
+  then
+    true
+  else
+    false
+  fi
+}
+
+is_num_locked () {
+  local state=$(cat /sys/class/leds/input?::numlock/brightness)
+  if [ $state -eq 1 ]
+  then
+    true
+  else
+    false
+  fi
+}
+
+get_layout() {
+  case $(swaymsg -t get_inputs | jq '.[0].xkb_active_layout_index') in
+    0)
+      echo en
+      ;;
+    1)
+      echo ru
+      ;;
+  esac
+}
+
 # Send the header so that i3bar knows we want to use JSON:
 echo '{ "version": 1 }'
 
@@ -29,9 +60,21 @@ echo '[]'
 # Now send blocks with information forever:
 while :;
 do
+  selected_layout=$(get_layout)
+
+  # See `man 7 swaybar-protocol` for more information.
   echo -e ",["
-  echo -e "{\"name\":\"welcome\", \"full_text\": \" $(get_battery) \"},"
+  if is_caps_locked
+    then echo -e "{\"name\":\"capslock_ind\",\"full_text\":\" CAPS \", \"background\": \"#ED143D\"},"
+  fi
+  if is_num_locked
+    then echo -e "{\"name\":\"capslock_ind\",\"full_text\":\" NUM \"},"
+  fi
+  if [ $selected_layout != "en" ]
+    then echo -e "{\"name\":\"layout\",\"full_text\":\" $selected_layout \", \"background\": \"#002EAD\"},"
+  fi
+  echo -e "{\"name\":\"welcome\",\"full_text\":\" $(get_battery) \"},"
   echo -e "{\"name\":\"id_time\",\"full_text\":\" $(get_datetime) \"}"
   echo -e "]"
-  sleep 1
+  sleep .25
 done
