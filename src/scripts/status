@@ -38,7 +38,7 @@ is_num_locked () {
 }
 
 get_layout() {
-  case $(swaymsg -t get_inputs | jq '.[0].xkb_active_layout_index') in
+  case $(swaymsg -t get_inputs | jq 'map(select(has("xkb_active_layout_name")))[0].xkb_active_layout_index') in
     0)
       echo en
       ;;
