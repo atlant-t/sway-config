@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+
+# Launch sway with a specific user, from a specific Virtual Terminal (vt)
+# Two arguments are expected: a username (e.g., larry) and the id of a free vt (e.g., 7)
+# See: https://wiki.gentoo.org/wiki/Sway#Launching_Sway_from_a_script
+
+if [ -z "$1" ] || [ -z "$2" ]; then
+  echo "User and tty number must be defined" 1>&2;
+  exit 1;
+fi
+
+user_id=$(id -u $1);
+user_name=$(id -u -n $1);
+tty_number=$2;
+
+join () {
+  local IFS="$1"
+  shift
+  echo "$*"
+}
+
+function get_launch_env_file_path() {
+  # We are looking for a launch.env file located next to config file which will be used to launch Sway.
+  # See the oreder to find the configuration in the section CONFIGURATION (man 1 sway).
+  if   [ -f "~$user_name/.sway/config" ];     then echo "~$user_name/.sway/launch.env";
+  elif [ -f "$XDG_CONFIG_HOME/sway/config" ]; then echo "$XDG_CONFIG_HOME/sway/launch.env";
+  elif [ -f "~$user_name/.i3/config" ];       then echo "~$user_name/.i3/launch.env";
+  elif [ -f "$XDG_CONFIG_HOME/i3/config" ];   then echo "$XDG_CONFIG_HOME/i3/launch.env";
+  elif [ -f "/etc/sway/config" ];             then echo "/etc/sway/launch.env";
+  elif [ -f "/etc/i3/config" ];               then echo "/etc/i3/launch.env";
+  fi;
+}
+
+function set_var() {
+  keys=()
+
+  if [ -f $1 ]; then
+    while read -r line; do
+      if [[ $line != '#'* ]] && [[ $line == *'='* ]]; then
+        key=$(echo "$line" | cut -d '=' -f 1)
+        value=$(echo "$line" | cut -d '=' -f 2-)
+
+        eval "export $key=\"$value\""
+        keys+=("$key")
+      fi
+    done < $1;
+  fi;
+
+  eval "export XDG_RUNTIME_DIR=\"/tmp/${user_id}-runtime-dir\""
+  keys+=(XDG_RUNTIME_DIR)
+
+  initialized_env_keys=$(join , "${keys[@]}");
+}
+
+# Configure environment from the `launch.env` file.
+set_var $(get_launch_env_file_path)
+
+# Set sway runtime dir up
+if ! test -d "${XDG_RUNTIME_DIR}"; then
+  mkdir "${XDG_RUNTIME_DIR}"
+  chown "$user_id" "$XDG_RUNTIME_DIR"
+  chmod 0700 "${XDG_RUNTIME_DIR}"
+fi
+
+# Prepare the tty for the user. vtX uses /dev/ttyX
+chown "$user_id" "/dev/tty${tty_number}"
+chmod 600 "/dev/tty${tty_number}"
+
+# Setup a clean environment for the user, take over the target vt, then launch sway
+su --login --command "openvt --switch --console ${tty_number} -- dbus-run-session -- sway >~$user_name/.sway_autolauncher.log 2>&1" -w $initialized_env_keys - "$1"
+
