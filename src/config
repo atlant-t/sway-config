@@ -9,20 +9,13 @@
 xwayland enable
 
 ### Variables
-#
-# Logo key. Use Mod1 for Alt.
-set $mod Mod4
-# Home row direction keys, like vim
-set $left h
-set $down j
-set $up k
-set $right l
+
 # Your preferred terminal emulator
 set $term foot
+
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-#set $menu dmenu_path | dmenu | xargs swaymsg exec --
 set $menu fuzzel -b 000000cc -f SourceCodePro:size=12 -i Arc -w 40 -l 25 -T foot
 
 ### Output configuration
@@ -92,78 +85,74 @@ exec gentoo-pipewire-launcher
 # Basics:
 #
     # Keyboard layout switching
-    bindsym $mod+Menu input "type:keyboard" xkb_switch_layout next
+    # Mod4+Menu
+    bindcode Mod4+135 input "type:keyboard" xkb_switch_layout next
 
     # Start a terminal
-    bindsym $mod+Return exec $term
+    # Mod4+Return
+    bindcode Mod4+36 exec $term
 
     # Kill focused window
-    bindsym $mod+Shift+q kill
+    # Mod4+Shift+q
+    bindcode Mod4+Shift+24 kill
 
     # Start your launcher
-    bindsym $mod+d exec $menu
+    # Mod4 + d
+    bindcode Mod4+40 exec $menu
 
-    # Drag floating windows by holding down $mod and left mouse button.
-    # Resize them with right mouse button + $mod.
+    # Drag floating windows by holding down Mod4 and left mouse button.
+    # Resize them with right mouse button + Mod4.
     # Despite the name, also works for non-floating windows.
     # Change normal to inverse to use left mouse button for resizing and right
     # mouse button for dragging.
-    floating_modifier $mod normal
+    floating_modifier Mod4 normal
 
     # Reload the configuration file
-    bindsym $mod+Shift+c reload
+    # Mod4+Shift+c
+    bindcode Mod4+Shift+54 reload
 
     # Exit sway (logs you out of your Wayland session)
-    bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+    # Mod4+Shift+e
+    bindcode Mod4+Shift+26 exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
 #
 # Moving around:
 #
     # Move your focus around
-    #bindsym $mod+$left focus left
-    #bindsym $mod+$down focus down
-    #bindsym $mod+$up focus up
-    #bindsym $mod+$right focus right
-    # Or use $mod+[up|down|left|right]
-    bindsym $mod+Left focus left
-    bindsym $mod+Down focus down
-    bindsym $mod+Up focus up
-    bindsym $mod+Right focus right
+    bindsym Mod4+Left focus left
+    bindsym Mod4+Down focus down
+    bindsym Mod4+Up focus up
+    bindsym Mod4+Right focus right
 
     # Move the focused window with the same, but add Shift
-    #bindsym $mod+Shift+$left move left
-    #bindsym $mod+Shift+$down move down
-    #bindsym $mod+Shift+$up move up
-    #bindsym $mod+Shift+$right move right
-    # Ditto, with arrow keys
-    bindsym $mod+Shift+Left move left
-    bindsym $mod+Shift+Down move down
-    bindsym $mod+Shift+Up move up
-    bindsym $mod+Shift+Right move right
+    bindsym Mod4+Shift+Left move left
+    bindsym Mod4+Shift+Down move down
+    bindsym Mod4+Shift+Up move up
+    bindsym Mod4+Shift+Right move right
 #
 # Workspaces:
 #
     # Switch to workspace
-    bindsym $mod+1 workspace number 1
-    bindsym $mod+2 workspace number 2
-    bindsym $mod+3 workspace number 3
-    bindsym $mod+4 workspace number 4
-    bindsym $mod+5 workspace number 5
-    bindsym $mod+6 workspace number 6
-    bindsym $mod+7 workspace number 7
-    bindsym $mod+8 workspace number 8
-    bindsym $mod+9 workspace number 9
-    bindsym $mod+0 workspace number 10
+    bindsym Mod4+1 workspace number 1
+    bindsym Mod4+2 workspace number 2
+    bindsym Mod4+3 workspace number 3
+    bindsym Mod4+4 workspace number 4
+    bindsym Mod4+5 workspace number 5
+    bindsym Mod4+6 workspace number 6
+    bindsym Mod4+7 workspace number 7
+    bindsym Mod4+8 workspace number 8
+    bindsym Mod4+9 workspace number 9
+    bindsym Mod4+0 workspace number 10
     # Move focused container to workspace
-    bindsym $mod+Shift+1 move container to workspace number 1
-    bindsym $mod+Shift+2 move container to workspace number 2
-    bindsym $mod+Shift+3 move container to workspace number 3
-    bindsym $mod+Shift+4 move container to workspace number 4
-    bindsym $mod+Shift+5 move container to workspace number 5
-    bindsym $mod+Shift+6 move container to workspace number 6
-    bindsym $mod+Shift+7 move container to workspace number 7
-    bindsym $mod+Shift+8 move container to workspace number 8
-    bindsym $mod+Shift+9 move container to workspace number 9
-    bindsym $mod+Shift+0 move container to workspace number 10
+    bindsym Mod4+Shift+1 move container to workspace number 1
+    bindsym Mod4+Shift+2 move container to workspace number 2
+    bindsym Mod4+Shift+3 move container to workspace number 3
+    bindsym Mod4+Shift+4 move container to workspace number 4
+    bindsym Mod4+Shift+5 move container to workspace number 5
+    bindsym Mod4+Shift+6 move container to workspace number 6
+    bindsym Mod4+Shift+7 move container to workspace number 7
+    bindsym Mod4+Shift+8 move container to workspace number 8
+    bindsym Mod4+Shift+9 move container to workspace number 9
+    bindsym Mod4+Shift+0 move container to workspace number 10
     # Note: workspaces can have any name you want, not just numbers.
     # We just use 1-10 as the default.
 
@@ -185,30 +174,35 @@ exec gentoo-pipewire-launcher
 # Layout stuff:
 #
     # You can "split" the current object of your focus with
-    # $mod+b or $mod+v, for horizontal and vertical splits
+    # Mod4+b or Mod4+v, for horizontal and vertical splits
     # respectively.
-    bindsym $mod+b splith
-    bindsym $mod+v splitv
+    bindcode Mod4+56 splith
+    bindcode Mod4+55 splitv
 
     # Switch the current container between different layout styles
-    bindsym $mod+s layout stacking
-    bindsym $mod+w layout tabbed
-    bindsym $mod+e layout toggle split
+    # Mod4+s stacking
+    # Mod4+w tabbed
+    # Mod4+e toggle split
+    bindcode Mod4+39 layout stacking
+    bindcode Mod4+25 layout tabbed
+    bindcode Mod4+26 layout toggle split
 
     # Make the current focus fullscreen
-    bindsym $mod+f fullscreen
+    # Mod4+f
+    bindcode Mod4+41 fullscreen
 
     # Toggle the current focus between tiling and floating mode
-    bindsym $mod+Shift+space floating toggle
+    bindsym Mod4+Shift+space floating toggle
 
     # Swap focus between the tiling area and the floating area
-    bindsym $mod+space focus mode_toggle
+    bindsym Mod4+space focus mode_toggle
 
     # Move focus to the parent container
-    bindsym $mod+a focus parent
+    # Mod4+a
+    bindcode Mod4+38 focus parent
 
     # Screenlock
-    bindsym $mod+Escape exec swaylock
+    bindsym Mod4+Escape exec swaylock
 
     # Touchpadlock
     bindsym XF86TouchpadToggle input type:touchpad events toggle disabled enabled
@@ -219,11 +213,11 @@ exec gentoo-pipewire-launcher
     # You can send windows there and get them back later.
 
     # Move the currently focused window to the scratchpad
-    bindsym $mod+Shift+minus move scratchpad
+    bindsym Mod4+Shift+minus move scratchpad
 
     # Show the next scratchpad window or hide the focused scratchpad window.
     # If there are multiple scratchpad windows, this command cycles through them.
-    bindsym $mod+minus scratchpad show
+    bindsym Mod4+minus scratchpad show
 #
 # Resizing containers:
 #
@@ -232,10 +226,6 @@ mode "resize" {
     # right will grow the containers width
     # up will shrink the containers height
     # down will grow the containers height
-    bindsym $left resize shrink width 10px
-    bindsym $down resize grow height 10px
-    bindsym $up resize shrink height 10px
-    bindsym $right resize grow width 10px
 
     # Ditto, with arrow keys
     bindsym Left resize shrink width 10px
@@ -247,7 +237,10 @@ mode "resize" {
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
-bindsym $mod+r mode "resize"
+
+# Resize mode activation
+# Mod4+r
+bindcode Mod4+27 mode "resize"
 
 #
 # Status Bar:
