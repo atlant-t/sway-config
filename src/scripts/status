@@ -65,13 +65,13 @@ do
   # See `man 7 swaybar-protocol` for more information.
   echo -e ",["
   if is_caps_locked
-    then echo -e "{\"name\":\"capslock_ind\",\"full_text\":\" CAPS \", \"background\": \"#ED143D\"},"
+    then echo -e "{\"name\":\"capslock_ind\",\"full_text\":\" CAPS \", \"background\": \"#BF616A\"},"
   fi
   if is_num_locked
     then echo -e "{\"name\":\"capslock_ind\",\"full_text\":\" NUM \"},"
   fi
   if [ $selected_layout != "en" ]
-    then echo -e "{\"name\":\"layout\",\"full_text\":\" $selected_layout \", \"background\": \"#002EAD\"},"
+    then echo -e "{\"name\":\"layout\",\"full_text\":\" $selected_layout \", \"background\": \"#88C0D0\", \"color\": \"#2E3440\"},"
   fi
   echo -e "{\"name\":\"welcome\",\"full_text\":\" $(get_battery) \"},"
   echo -e "{\"name\":\"id_time\",\"full_text\":\" $(get_datetime) \"}"
